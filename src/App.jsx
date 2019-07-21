@@ -1,21 +1,33 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import DeckEditor from './View/DeckEditor';
 
 class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>hai</h2>
-        </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
-    );
-  }
+    constructor() {
+        super();
+        this.state = {
+            view: "deckEdit",
+            deck: []
+        }
+
+        this.toggleViewState = this.toggleViewState.bind(this);
+        this.updateDeck = this.updateDeck.bind(this);
+    }
+
+    toggleViewState(view) {
+        this.setState({
+            view: view
+        })
+    }
+
+    updateDeck(deck) {
+        this.setState({ deck: deck });
+    }
+
+    render() {
+        return (
+            <DeckEditor toggleViewState={this.toggleViewState} updateDeck={this.updateDeck} />
+        );
+    }
 }
 
 export default App;
