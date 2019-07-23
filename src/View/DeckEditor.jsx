@@ -1,4 +1,5 @@
 import React from 'react';
+import {TextField, Button} from '@material-ui/core';
 
 class DeckEditor extends React.Component {
     constructor() {
@@ -76,17 +77,17 @@ class DeckEditor extends React.Component {
     render() {
         return (
             <div>
-                <label for="tags">Enter a card name</label>
-                <div className="ui-widget input-group mb-3">
-                    <input placeholder="eg Pikachu" onInput={(e) => this.handleChange(e)} id="tags" />
-                </div>
+                <TextField
+                    label="Enter a card"
+                    placeholder="eg Pikachu" 
+                    onInput={(e) => this.handleChange(e)} />
+
+                <Button variant="contained" onClick={() => this.loadCard(this.state.cardInput)}>Insert another</Button>
+                <Button variant="contained" color="primary" onClick={() => this.props.toggleViewState("game")}>Play the game</Button>
 
                 {
                     this.state.searchResults.map(result => <p>{result}</p>)
                 }
-
-                <button onClick={() => this.loadCard(this.state.cardInput)}>Insert another</button>
-                <button onClick={() => this.props.toggleViewState("game")}>Play the game</button>
             </div>
         );
     }
