@@ -2,6 +2,11 @@ import React, { Component } from 'react';
 import DeckEditor from './View/DeckEditor';
 import Auth from '@aws-amplify/auth';
 
+import Typography from '@material-ui/core/Typography';
+import Container from '@material-ui/core/Container';
+import Button from '@material-ui/core/Button';
+import 'typeface-roboto';
+
 class App extends Component {
     constructor() {
         super();
@@ -37,9 +42,16 @@ class App extends Component {
     render() {
         return (
             <div>
-                <button onClick={() => Auth.federatedSignIn()}>Sign In</button>
-                <div>Hello {this.state.user}!</div>
-                <DeckEditor toggleViewState={this.toggleViewState} updateDeck={this.updateDeck} />
+                <Container maxWidth="md">
+                    {this.state.user.length === 0 ? 
+                    <Button onClick={() => Auth.federatedSignIn()}>Sign In</Button> :
+                    <Typography variant="h5" component="h5">
+                        Hello {this.state.user}!
+                    </Typography>
+                    }
+
+                    <DeckEditor toggleViewState={this.toggleViewState} updateDeck={this.updateDeck} />
+                </Container>
             </div>
         );
     }
