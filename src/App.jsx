@@ -1,16 +1,27 @@
 import React, { Component } from 'react';
 import DeckEditor from './View/DeckEditor';
+import Auth from '@aws-amplify/auth';
 
 class App extends Component {
     constructor() {
         super();
         this.state = {
             view: "deckEdit",
-            deck: []
+            deck: [],
+            user: ''
         }
 
         this.toggleViewState = this.toggleViewState.bind(this);
         this.updateDeck = this.updateDeck.bind(this);
+    }
+
+    componentDidMount() {
+        Auth.currentAuthenticatedUser()
+            .then(user => 
+                this.setState({
+                    user: user.attributes.email
+                })
+            );
     }
 
     toggleViewState(view) {
@@ -25,7 +36,11 @@ class App extends Component {
 
     render() {
         return (
-            <DeckEditor toggleViewState={this.toggleViewState} updateDeck={this.updateDeck} />
+            <div>
+                <button onClick={() => Auth.federatedSignIn()}>Sign In</button>
+                <div>Hello {this.state.user}!</div>
+                <DeckEditor toggleViewState={this.toggleViewState} updateDeck={this.updateDeck} />
+            </div>
         );
     }
 }

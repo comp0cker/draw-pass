@@ -1,0 +1,23 @@
+{
+    "local": {
+        "awscloudformation": {
+            "AuthRoleName": "draw-pass-local-20190727210518-authRole",
+            "UnauthRoleArn": "arn:aws:iam::843766748681:role/draw-pass-local-20190727210518-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::843766748681:role/draw-pass-local-20190727210518-authRole",
+            "Region": "us-east-1",
+            "DeploymentBucketName": "draw-pass-local-20190727210518-deployment",
+            "UnauthRoleName": "draw-pass-local-20190727210518-unauthRole",
+            "StackName": "draw-pass-local-20190727210518",
+            "StackId": "arn:aws:cloudformation:us-east-1:843766748681:stack/draw-pass-local-20190727210518/c492e4e0-b0d3-11e9-9f8a-12c9298e4208"
+        },
+        "categories": {
+            "auth": {
+                "drawpass780073ab": {
+                    "googleAppIdUserPool": "215266958730-b8sn5u1pdbeg76n27m2aia63rteu5405.apps.googleusercontent.com",
+                    "googleAppSecretUserPool": "fWg2K0p0SZ0ta7FhQUXCPMrz",
+                    "hostedUIProviderCreds": "[{\"ProviderName\":\"Google\",\"client_id\":\"215266958730-b8sn5u1pdbeg76n27m2aia63rteu5405.apps.googleusercontent.com\",\"client_secret\":\"fWg2K0p0SZ0ta7FhQUXCPMrz\"}]"
+                }
+            }
+        }
+    }
+}

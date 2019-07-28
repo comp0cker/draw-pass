@@ -1,0 +1,11 @@
+{
+    "AppSyncApiName": "drawpass",
+    "DynamoDBBillingMode": "PAY_PER_REQUEST",
+    "DynamoDBEnableServerSideEncryption": "false",
+    "AuthCognitoUserPoolId": {
+        "Fn::GetAtt": [
+            "authdrawpass780073ab",
+            "Outputs.UserPoolId"
+        ]
+    }
+}

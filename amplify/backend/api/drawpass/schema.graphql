@@ -1,0 +1,5 @@
+type Deck @model {
+    id: ID!
+    title: String!
+    list: String!
+}

@@ -1,5 +1,6 @@
 import React from 'react';
-import {TextField, Button} from '@material-ui/core';
+import {TextField, Button, List, ListItem, ListItemText} from '@material-ui/core';
+import Deck from '../Card/Deck'
 
 class DeckEditor extends React.Component {
     constructor() {
@@ -9,7 +10,8 @@ class DeckEditor extends React.Component {
             cardInputResults: [],
             renderDeck: false,
             loadedCards: [],
-            searchResults: []
+            searchResults: [],
+            renderSearchResults: true
         };
 
         this.deleteCard = this.deleteCard.bind(this);
@@ -17,7 +19,8 @@ class DeckEditor extends React.Component {
 
     handleChange(e) {
         this.setState({
-            cardInput: e.target.value
+            cardInput: e.target.value,
+            renderSearchResults: true
         })
         
         fetch(this.getCardUrl(e.target.value))
@@ -62,7 +65,8 @@ class DeckEditor extends React.Component {
                 
                 this.setState({ 
                     loadedCards: [...this.state.loadedCards, cardObj] ,
-                    cardInput: val
+                    cardInput: val,
+                    renderSearchResults: false
                 }, () => {this.props.updateDeck(this.state.loadedCards);})
             }
         )
@@ -85,9 +89,20 @@ class DeckEditor extends React.Component {
                 <Button variant="contained" onClick={() => this.loadCard(this.state.cardInput)}>Insert another</Button>
                 <Button variant="contained" color="primary" onClick={() => this.props.toggleViewState("game")}>Play the game</Button>
 
-                {
-                    this.state.searchResults.map(result => <p>{result}</p>)
+                {this.state.renderSearchResults === false ? null :
+                    <List component="nav" aria-label="main mailbox folders">
+                        {this.state.searchResults.map(result => 
+                            <ListItem button onClick={() => this.loadCard(result)}>
+                                <ListItemText primary={result} />
+                            </ListItem>)}
+                    </List>
                 }
+
+                <Deck 
+                    cards={this.state.loadedCards} 
+                    onDeckCardClick={this.deleteCard}
+                    view={true}
+                />
             </div>
         );
     }
