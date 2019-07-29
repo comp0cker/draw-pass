@@ -428,4 +428,3 @@ export default DeckEditor;
 
 // 4 of each card
 // 60 card cap
-// 

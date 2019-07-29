@@ -10,6 +10,7 @@ class Card extends React.Component {
                 <img 
                 src="https://upload.wikimedia.org/wikipedia/en/3/3b/Pokemon_Trading_Card_Game_cardback.jpg"
                 className={this.props.class}
+                height="139.583px"
                 width="100px"
                 onClick={() => this.props.onCardClick() }/>
             );
@@ -18,6 +19,7 @@ class Card extends React.Component {
             <img 
                 src={this.props.imageUrl} 
                 className={this.props.class}
+                height="139.583px"
                 width="100px"
                 onClick={() => this.props.onCardClick() }/>
         );
