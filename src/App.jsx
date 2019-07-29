@@ -45,10 +45,17 @@ class App extends Component {
                 <Container maxWidth="md">
                     {this.state.user.length === 0 ? 
                     <Button onClick={() => Auth.federatedSignIn()}>Sign In</Button> :
-                    <Typography variant="h5" component="h5">
+                    <Typography variant="p" component="p">
                         Hello {this.state.user}!
                     </Typography>
                     }
+
+                    <Typography variant="h2" component="h2">
+                        Draw Pass
+                    </Typography>
+                    <Typography variant="subtitle1" component="subtitle1">
+                        Responsive deck editor built off React
+                    </Typography>
 
                     <DeckEditor toggleViewState={this.toggleViewState} updateDeck={this.updateDeck} />
                 </Container>
