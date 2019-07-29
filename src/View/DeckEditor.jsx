@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import {CheckCircle, Info, Close, Warning} from '@material-ui/icons';
-import {TextField, Button, FormControl, List, ListItem, ListItemText, Select, MenuItem, InputLabel} from '@material-ui/core';
+import {TextField, Button, FormControl, List, ListItem, ListItemText, Select, MenuItem, InputLabel, Badge} from '@material-ui/core';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -151,28 +151,53 @@ class DeckEditor extends React.Component {
     }
 
     loadCard(val) {
-        let name = val.split(" (")[0]
-        let set = val.split(" (")[1].split(" - ")[0]
-        let number = val.split(" (")[1].split(" - ")[1].split(")")[0]
+        let name = val.split(" (")[0];
+        let set = val.split(" (")[1].split(" - ")[0];
+        let number = val.split(" (")[1].split(" - ")[1].split(")")[0];
 
         fetch(this.getCardUrl(name, set, number))
         .then(res => res.json())
         .then(
             result => {
-                let cardObj = {
-                    "name": name,
-                    "set": set,
-                    "number": number,
-                    "id": Date.now(),
-                    "imageUrl": result.cards[0].imageUrl,
-                    "supertype": result.cards[0].supertype
-                };
-                
-                this.setState({ 
-                    loadedCards: [...this.state.loadedCards, cardObj] ,
-                    cardInput: val,
-                    renderSearchResults: false
-                }, () => {this.props.updateDeck(this.state.loadedCards);})
+                if (this.state.loadedCards.filter(card => card.imageUrl === result.cards[0].imageUrl).length > 0) {
+                    var temp = this.state.loadedCards;
+                    var duplicateCard = temp.filter(card => card.imageUrl === result.cards[0].imageUrl)[0];
+
+                    if (duplicateCard.count === 4 && !(duplicateCard.subtype === "Basic" && duplicateCard.supertype === "Energy")) {
+                        this.setState({
+                            snackbarOpen: true,
+                            snackbarMessage: "You can't add more than 4 " + duplicateCard.name + "s!",
+                            snackbarVariant: "warning",
+                        });
+                    }
+                    else {
+                        duplicateCard.count += 1;
+
+                        this.setState({ 
+                            loadedCards: temp,
+                            cardInput: val,
+                            renderSearchResults: false
+                        }, () => {this.props.updateDeck(this.state.loadedCards);});
+                    }
+                }
+                else {
+                    let cardObj = {
+                        "name": name,
+                        "set": set,
+                        "number": number,
+                        "id": Date.now(),
+                        "imageUrl": result.cards[0].imageUrl,
+                        "subtype": result.cards[0].subtype,
+                        "supertype": result.cards[0].supertype,
+                        "count": 1
+                    };
+
+                    this.setState({ 
+                        loadedCards: [...this.state.loadedCards, cardObj] ,
+                        cardInput: val,
+                        renderSearchResults: false
+                    }, () => {this.props.updateDeck(this.state.loadedCards);})
+                }
             }
         )
     }
@@ -400,3 +425,7 @@ class DeckEditor extends React.Component {
 };
 
 export default DeckEditor;
+
+// 4 of each card
+// 60 card cap
+// 

@@ -44,7 +44,7 @@ class App extends Component {
             <div>
                 <Container maxWidth="md">
                     {this.state.user.length === 0 ? 
-                    <Button onClick={() => Auth.federatedSignIn()}>Sign In</Button> :
+                    <Button onClick={() => Auth.federatedSignIn()}><strike>Sign In</strike></Button> :
                     <Typography variant="p" component="p">
                         Hello {this.state.user}!
                     </Typography>
