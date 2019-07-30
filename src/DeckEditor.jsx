@@ -1,86 +1,15 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import clsx from 'clsx';
-import { makeStyles } from '@material-ui/core/styles';
-import {CheckCircle, Info, Close, Warning} from '@material-ui/icons';
 import {TextField, Button, FormControl, List, ListItem, ListItemText, Select, MenuItem, InputLabel, Badge} from '@material-ui/core';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { amber, green } from '@material-ui/core/colors';
-import IconButton from '@material-ui/core/IconButton';
 import Snackbar from '@material-ui/core/Snackbar';
-import SnackbarContent from '@material-ui/core/SnackbarContent';
+import MySnackbarContentWrapper from './Components/MySnackbarConentWrapper';
 
-import Deck from '../Card/Deck';
+import Deck from './Card/Deck';
 import Cookies from 'js-cookie';
-
-const variantIcon = {
-    success: CheckCircle,
-    warning: Warning,
-    error: Error,
-    info: Info,
-  };
-  
-  const useStyles1 = makeStyles(theme => ({
-    success: {
-      backgroundColor: green[600],
-    },
-    error: {
-      backgroundColor: theme.palette.error.dark,
-    },
-    info: {
-      backgroundColor: theme.palette.primary.main,
-    },
-    warning: {
-      backgroundColor: amber[700],
-    },
-    icon: {
-      fontSize: 20,
-    },
-    iconVariant: {
-      opacity: 0.9,
-      marginRight: theme.spacing(1),
-    },
-    message: {
-      display: 'flex',
-      alignItems: 'center',
-    },
-  }));
-  
-  function MySnackbarContentWrapper(props) {
-    const classes = useStyles1();
-    const { className, message, onClose, variant, ...other } = props;
-    const Icon = variantIcon[variant];
-  
-    return (
-      <SnackbarContent
-        className={clsx(classes[variant], className)}
-        aria-describedby="client-snackbar"
-        message={
-          <span id="client-snackbar" className={classes.message}>
-            <Icon className={clsx(classes.icon, classes.iconVariant)} />
-            {message}
-          </span>
-        }
-        action={[
-          <IconButton key="close" aria-label="close" color="inherit" onClick={onClose}>
-            <Close className={classes.icon} />
-          </IconButton>,
-        ]}
-        {...other}
-      />
-    );
-  }
-  
-  MySnackbarContentWrapper.propTypes = {
-    className: PropTypes.string,
-    message: PropTypes.string,
-    onClose: PropTypes.func,
-    variant: PropTypes.oneOf(['error', 'info', 'success', 'warning']).isRequired,
-  };
 
 class DeckEditor extends React.Component {
     constructor() {
@@ -136,7 +65,7 @@ class DeckEditor extends React.Component {
         name = name.split(" EX").join("-EX");
         name = name.split(" ").join("+");
 
-        var url = "https://api.pokemontcg.io/v1/cards/?name=" + name;
+        let url = "https://api.pokemontcg.io/v1/cards/?name=" + name;
         return url;
     }
 
@@ -146,7 +75,7 @@ class DeckEditor extends React.Component {
         name = name.split(" EX").join("-EX");
         name = name.split(" ").join("+");
 
-        var url = "https://api.pokemontcg.io/v1/cards/?name=" + name + "&set=" + set + "&number=" + number;
+        let url = "https://api.pokemontcg.io/v1/cards/?name=" + name + "&set=" + set + "&number=" + number;
         return url;
     }
 
@@ -160,10 +89,12 @@ class DeckEditor extends React.Component {
         .then(
             result => {
                 if (this.state.loadedCards.filter(card => card.imageUrl === result.cards[0].imageUrl).length > 0) {
-                    var temp = this.state.loadedCards;
-                    var duplicateCard = temp.filter(card => card.imageUrl === result.cards[0].imageUrl)[0];
+                    let temp = this.state.loadedCards;
+                    let duplicateNameCount = temp.filter(card => card.name === result.cards[0].name).reduce((a, b) => a.count + b.count);
+                    let duplicateCard = temp.filter(card => card.imageUrl === result.cards[0].imageUrl)[0];
+                    console.log(duplicateNameCount);
 
-                    if (duplicateCard.count === 4 && !(duplicateCard.subtype === "Basic" && duplicateCard.supertype === "Energy")) {
+                    if ((duplicateNameCount === 4 || duplicateCard.count === 4) && !(duplicateCard.subtype === "Basic" && duplicateCard.supertype === "Energy")) {
                         this.setState({
                             snackbarOpen: true,
                             snackbarMessage: "You can't add more than 4 " + duplicateCard.name + "s!",
@@ -202,10 +133,18 @@ class DeckEditor extends React.Component {
         )
     }
 
-    deleteCard(id) {;
-        let newCards = this.state.loadedCards.filter(obj => obj.id != id);
-        console.log(newCards);
-        this.setState({ loadedCards: newCards }, () => {this.props.updateDeck(this.state.loadedCards);})
+    deleteCard(id) {
+        if (this.state.loadedCards.filter(obj => obj.id === id)[0].count > 1) {
+            let newCards = this.state.loadedCards;
+            newCards.filter(obj => obj.id === id)[0].count -= 1;
+            this.setState({ loadedCards: newCards }, () => {this.props.updateDeck(this.state.loadedCards);})
+        }
+        else {
+            let newCards = this.state.loadedCards.filter(obj => obj.id !== id);
+            console.log(newCards);
+            this.setState({ loadedCards: newCards }, () => {this.props.updateDeck(this.state.loadedCards);})
+        }
+
     }
 
     loadDeck(deck) {

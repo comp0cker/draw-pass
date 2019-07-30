@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import DeckEditor from './View/DeckEditor';
-import Auth from '@aws-amplify/auth';
-
-import Typography from '@material-ui/core/Typography';
+import DeckEditor from './DeckEditor';
 import Container from '@material-ui/core/Container';
+import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import 'typeface-roboto';
+import ButtonAppBar from './Components/ButtonAppBar'
+
+import Auth from '@aws-amplify/auth';
 
 class App extends Component {
     constructor() {
@@ -40,22 +40,19 @@ class App extends Component {
     }
 
     render() {
+
         return (
             <div>
                 <Container maxWidth="md">
-                    {this.state.user.length === 0 ? 
-                    <Button onClick={() => Auth.federatedSignIn()}><strike>Sign In</strike></Button> :
-                    <Typography variant="p" component="p">
-                        Hello {this.state.user}!
-                    </Typography>
-                    }
-
+                    <ButtonAppBar user={this.state.user}/>
+                    {/*
                     <Typography variant="h2" component="h2">
                         Draw Pass
                     </Typography>
                     <Typography variant="subtitle1" component="subtitle1">
                         Responsive deck editor built off React
                     </Typography>
+                    */}
 
                     <DeckEditor toggleViewState={this.toggleViewState} updateDeck={this.updateDeck} />
                 </Container>
