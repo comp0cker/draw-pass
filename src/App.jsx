@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import DeckEditor from './DeckEditor';
+import Game from './Game';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
@@ -45,16 +46,11 @@ class App extends Component {
             <div>
                 <Container maxWidth="md">
                     <ButtonAppBar user={this.state.user}/>
-                    {/*
-                    <Typography variant="h2" component="h2">
-                        Draw Pass
-                    </Typography>
-                    <Typography variant="subtitle1" component="subtitle1">
-                        Responsive deck editor built off React
-                    </Typography>
-                    */}
-
-                    <DeckEditor toggleViewState={this.toggleViewState} updateDeck={this.updateDeck} />
+                    {
+                        this.state.view === 'deckEdit' ?
+                            <DeckEditor toggleViewState={this.toggleViewState} updateDeck={this.updateDeck} />
+                            : <Game deck={this.state.deck}/>
+                    }
                 </Container>
             </div>
         );

@@ -25,7 +25,8 @@ class DeckEditor extends React.Component {
             saveDeckName: '',
             snackbarOpen: false,
             savedDecks: {},
-            deleteConfirmationOpen: false
+            deleteConfirmationOpen: false,
+            numberCards: 0
         };
 
         this.deleteCard = this.deleteCard.bind(this);
@@ -107,7 +108,8 @@ class DeckEditor extends React.Component {
                         this.setState({ 
                             loadedCards: temp,
                             cardInput: val,
-                            renderSearchResults: false
+                            renderSearchResults: false,
+                            numberCards: this.state.numberCards + 1
                         }, () => {this.props.updateDeck(this.state.loadedCards);});
                     }
                 }
@@ -126,7 +128,8 @@ class DeckEditor extends React.Component {
                     this.setState({ 
                         loadedCards: [...this.state.loadedCards, cardObj] ,
                         cardInput: val,
-                        renderSearchResults: false
+                        renderSearchResults: false,
+                        numberCards: this.state.numberCards + 1
                     }, () => {this.props.updateDeck(this.state.loadedCards);})
                 }
             }
@@ -145,6 +148,7 @@ class DeckEditor extends React.Component {
             this.setState({ loadedCards: newCards }, () => {this.props.updateDeck(this.state.loadedCards);})
         }
 
+        this.setState({ numberCards: this.state.numberCards - 1 });
     }
 
     loadDeck(deck) {
@@ -154,7 +158,7 @@ class DeckEditor extends React.Component {
             snackbarMessage: deck + " loaded!",
             snackbarVariant: "success",
             saveDeckName: deck
-        });
+        }, () => {this.props.updateDeck(this.state.loadedCards);});
     }
 
     saveDeck() {
@@ -322,12 +326,8 @@ class DeckEditor extends React.Component {
         )
     }
 
-    kek() {
-        this.setState({
-            snackbarOpen: true,
-            snackbarMessage: "no game yet sry XD",
-            snackbarVariant: "info"
-        });
+    playGame() {
+        this.props.toggleViewState('game');
     }
 
     render() {
@@ -347,11 +347,13 @@ class DeckEditor extends React.Component {
                 <Button variant="contained" onClick={() => this.state.saveDeckName === '' ? this.setState({ cardSaveOpen: true }) : this.saveDeck()}>Save deck</Button>
                 {this.state.saveDeckName === '' ? null : <Button variant="contained" onClick={() => this.setState({ deleteConfirmationOpen: true })}>Delete deck</Button>}
 
-                <Button variant="contained" color="primary" onClick={() => this.kek()}>Play the game</Button>
+                <Button variant="contained" color="primary" onClick={() => this.playGame()}>Play the game</Button>
 
                 {this.renderDeckSaveDialog()}
                 {this.renderDeckDeleteDialog()}
                 {this.renderSnackbar()}
+
+                <div>{this.state.numberCards} cards</div>
 
                 <Deck 
                     cards={this.state.loadedCards} 
